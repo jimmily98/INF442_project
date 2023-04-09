@@ -12,4 +12,5 @@ public:
 
     Graph();
     void exceldataload(bool ifprint);
+    void exceldataloadcpp(bool ifprint, std::string filename);
 };

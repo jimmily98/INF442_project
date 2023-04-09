@@ -7,6 +7,7 @@ Graph::Graph(){
 }
 
 void Graph::exceldataload(bool ifprint) {
+
     std::cout << "exceldataload" << std::endl;
     Py_Initialize();
     PyObject* sysPath1 = PySys_GetObject("path");
@@ -102,4 +103,35 @@ void Graph::exceldataload(bool ifprint) {
         std::cout << std::endl;
     }
     
+}
+
+
+void Graph::exceldataloadcpp(bool ifprint, std::string filename){
+    std::cout << "exceldataloadcpp" << std::endl;
+    std::string filepath = "./data/" + filename;
+    std::ifstream file(filepath);
+    std::string line;
+    std::getline(file, line);
+    while (std::getline(file, line)) {
+        std::stringstream ss(line);
+        std::string item;
+        std::getline(ss, item, ',');
+        FromNodeId.push_back(std::stoi(item));
+        std::getline(ss, item, ',');
+        ToNodeId.push_back(std::stoi(item));
+    }
+    std::cout<<"exceldataloadcpp end"<<std::endl;
+    if(ifprint){
+        // Print the vectors
+        std::cout << "FromNodeId:";
+        for (int i = 0; i < FromNodeId.size(); i++) {
+            std::cout << FromNodeId[i] << " ";
+        }
+        std::cout << "\n ToNodeId:";
+        for (int i = 0; i < ToNodeId.size(); i++) {
+            std::cout << ToNodeId[i] << " ";
+        }
+        std::cout << std::endl;
+    }
+
 }

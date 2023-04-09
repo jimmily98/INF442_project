@@ -3,7 +3,7 @@ import pandas as pd
 import sys
 
 def load_data():
-    filename = "test.xlsx"
+    filename = "Slashdot0902.xlsx"
     # Get the current working directory
     current_dir = os.getcwd()
 
