@@ -12,11 +12,15 @@ int main()
     double total_time;
     
     start_time = clock(); 
-    
+    Graph G;
+    std::string filename = "test.csv";
+    int n = 15;
+    double p = 0.15;
+
+    // Generate a random digraph
+    G.ERDirectedGraph(n,p,filename);
     try
     {
-        Graph G;
-        std::string filename = "Slashdot0902.csv";
         G.exceldataloadcpp(false, filename);
     }
     catch(const std::exception& e)
@@ -24,10 +28,17 @@ int main()
         std::cout << "Error: ";
         std::cerr << e.what() << '\n';
     }
+    G.generateAdjacencyList();
+    // Print the graph edges
+    // std::cout << "Edges:" << std::endl;
+    // G.printEdges();
+
+    G.computeSCC();
+    G.printSCC();
+
     end_time = clock();
     total_time = (double)(end_time - start_time) / CLOCKS_PER_SEC;
     std::cout << "Total time: " << total_time << "s" << std::endl;
-    
     std::cout << "Press any key to exit...";
     getchar(); // waits for user to press any key
     return 0;

@@ -105,7 +105,6 @@ void Graph::exceldataload(bool ifprint) {
     
 }
 
-
 void Graph::exceldataloadcpp(bool ifprint, std::string filename){
     std::cout << "exceldataloadcpp" << std::endl;
     std::string filepath = "./data/" + filename;
@@ -135,3 +134,150 @@ void Graph::exceldataloadcpp(bool ifprint, std::string filename){
     }
 
 }
+
+void Graph::printEdges() {
+    for (int i = 0; i < FromNodeId.size(); ++i) {
+        std::cout << FromNodeId[i] << " -> " << ToNodeId[i] << std::endl;
+    }
+}
+
+void Graph::generateAdjacencyList()//use the relations of edge to generate an adjacency list
+{
+    int maxNode = 0;
+    for (int i = 0; i < FromNodeId.size(); ++i) {
+        int fromNode = FromNodeId[i];
+        int toNode = ToNodeId[i];
+        maxNode = std::max(maxNode, std::max(fromNode, toNode));
+    }
+    size=maxNode+1;
+    vertices.resize(size, 0);
+    adjacencyList.resize(size);
+    verticesto.resize(size);
+    SCC.resize(size);
+
+    for (int i = 0; i < FromNodeId.size(); ++i) {
+        int fromNode = FromNodeId[i];
+        int toNode = ToNodeId[i];
+        adjacencyList[fromNode].push_back(toNode);
+        vertices[fromNode] = 1;
+        vertices[toNode] = 1;
+    }
+}
+
+// print a vector
+void Graph::printVector(const std::vector<int>& vec) const
+    {
+        for (int elem : vec) {
+            std::cout << elem << ' ';
+        }
+        std::cout << std::endl;
+    }
+
+// print a 2 dimension vector
+void Graph::printNestedVector(const std::vector<std::vector<int>>& nested_vector) const {
+        for (const auto& inner_vector : nested_vector) {
+            for (int elem : inner_vector) {
+                std::cout << elem << ' ';
+            }
+            std::cout << std::endl;
+        }
+    }
+
+// DFS on a given point i to find all points that it connects to
+void Graph::DFS(int i){
+    std::vector<int> havevisited;
+    std::vector<int> stack;
+    havevisited.resize(size, 0);
+    stack.resize(1,i);
+    havevisited[i]=1;
+    while (stack.size()>0)
+    {
+        int v=stack.back();
+        stack.pop_back();
+        for (int neighbor : adjacencyList[v]) {
+            if (havevisited[neighbor]==0)
+            {
+                havevisited[neighbor]=1;
+                stack.push_back(neighbor);
+            }
+        }
+    }
+    verticesto[i]=havevisited;
+}
+
+// compute Stronly connnecte conponents
+void Graph::computeSCC(){
+    for (int i=0;i<size;i++)
+    {
+        DFS(i);
+    }
+    for (int i=0;i<size;i++)
+    {
+        for (int j=0;j<size;j++)
+        {
+            if (verticesto[i][j]==1 && verticesto[j][i]==1)
+            {
+                SCC[i].push_back(j);
+            }
+        }
+    }
+}
+
+void Graph::printSCC(){
+    std::vector<int> haveprinted;
+    haveprinted.resize(size, 0);
+    for (int i=0;i<size;i++)
+    {
+        if (haveprinted[i]==0)
+        {
+            printVector(SCC[i]);
+            for (int neighbor : SCC[i])
+            {
+                haveprinted[neighbor]=1;
+            }
+        }
+    }
+}
+
+double Graph::RandomGene(){
+    std::mt19937 generator;
+    std::random_device rd;
+    std::seed_seq seed{ rd(), rd(), rd(), rd(), rd(), rd(), rd(), rd() };
+    generator.seed(seed);
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    double random_value = distribution(generator);
+    return random_value;
+}
+
+void Graph::ERDirectedGraph(int n, double p, string filename){
+    
+    assert(n>0 && p>=0 && p<=1);
+
+    // Total number of (eligible) edges: n(n-1)
+    FromNodeId.resize(0);
+    ToNodeId.resize(0);
+    for (int i=0;i<n;i++)
+    {
+        for (int j=0;j<n;j++)
+        {
+            // assign the edge i -> j with probability p
+            if (i!=j && RandomGene()<p)
+            {
+                FromNodeId.push_back(i);
+                ToNodeId.push_back(j);
+            }
+
+        }
+    }
+    // generate the .csv file of FromNodeId and ToNodeId
+    std::string filepath = "./data/" + filename;
+    ofstream outfile(filepath);
+    outfile << "FromNodeId,ToNodeId" << endl;
+
+    for (int i = 0; i < FromNodeId.size(); i++) {
+        outfile << FromNodeId[i] << "," << ToNodeId[i] << endl;
+    }
+
+    outfile.close();
+}
+
