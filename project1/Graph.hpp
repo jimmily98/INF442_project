@@ -15,6 +15,9 @@ public:
     std::vector<std::vector<int>> adjacencyList;
     std::vector<std::vector<int>>  verticesto;
     std::vector<std::vector<int>>  SCC;
+    std::vector<std::vector<double>> distanceMatrix;
+    std::vector<std::vector<double>> sortedDistances;
+    std::vector<std::vector<int>> sortedIndices;
 
     Graph();
     void exceldataload(bool ifprint);
@@ -28,4 +31,11 @@ public:
     void printSCC();
     double RandomGene();
     void ERDirectedGraph(int n, double p, std::string filename);
+    void printDistanceMatrix() const;
+    void setDistances(const std::vector<std::vector<double>>& inputDistances);
+    void sortDistances();
+    void printSortedDistances() const;
+    void printSortedIndices() const;
+
+
 };

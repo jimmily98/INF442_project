@@ -1,4 +1,5 @@
 #include "Graph.hpp"
+#include <algorithm>
 
 using namespace std;
 
@@ -279,5 +280,68 @@ void Graph::ERDirectedGraph(int n, double p, string filename){
     }
 
     outfile.close();
+}
+
+//distance part
+
+void Graph::printDistanceMatrix() const {
+    for (const auto& row : distanceMatrix) {
+        for (double elem : row) {
+            std::cout << elem << ' ';
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Graph::setDistances(const std::vector<std::vector<double>>& inputDistances) {
+    size = inputDistances.size();
+    distanceMatrix = inputDistances;
+}
+
+void Graph::sortDistances() {
+    sortedDistances.resize(distanceMatrix.size());
+    sortedIndices.resize(distanceMatrix.size());
+
+    for (int i = 0; i < distanceMatrix.size(); ++i) {
+        // Create a vector of pairs for the current vertex
+        std::vector<std::pair<double, int>> distanceIndexPairs;
+
+        for (int j = 0; j < distanceMatrix[i].size(); ++j) {
+            if (i != j) { // Skip the distance to itself
+                distanceIndexPairs.push_back(std::make_pair(distanceMatrix[i][j], j));
+            }
+        }
+
+        // Sort the vector of pairs based on the distances
+        std::sort(distanceIndexPairs.begin(), distanceIndexPairs.end());
+
+        // Store the sorted distances and indices for the current vertex
+        sortedDistances[i].resize(distanceIndexPairs.size());
+        sortedIndices[i].resize(distanceIndexPairs.size());
+        for (int j = 0; j < distanceIndexPairs.size(); ++j) {
+            sortedDistances[i][j] = distanceIndexPairs[j].first;
+            sortedIndices[i][j] = distanceIndexPairs[j].second;
+        }
+    }
+}
+
+void Graph::printSortedDistances() const {
+    std::cout << "Sorted Distances:" << std::endl;
+    for (const auto& row : sortedDistances) {
+        for (double distance : row) {
+            std::cout << distance << ' ';
+        }
+        std::cout << std::endl;
+    }
+}
+
+void Graph::printSortedIndices() const {
+    std::cout << "Sorted Indices:" << std::endl;
+    for (const auto& row : sortedIndices) {
+        for (int index : row) {
+            std::cout << index << ' ';
+        }
+        std::cout << std::endl;
+    }
 }
 
