@@ -345,3 +345,76 @@ void Graph::printSortedIndices() const {
     }
 }
 
+vector<vector<double>> Graph::GetSampleDistances(string filename){
+    string filepath = "./data/" + filename;
+    ifstream file(filepath);
+    string line;
+    getline(file, line);
+    vector<string> coor;
+    vector<double> coor1;
+    vector<double> coor2;
+
+    if(filename == "LondonTrajectoriesDataset.csv"){
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string item;
+
+            int i = 0;
+            while(getline(ss, item, ',')){
+                if(i == 16){
+                    int pos = item.find(";");
+                    coor.push_back(item.substr(0,pos));
+                }
+                i++;
+            }
+        }
+        coor.erase(unique(coor.begin(), coor.end()), coor.end());
+        for(int i = 0 ; i < coor.size(); i++){
+            int str = coor[i].find(":");
+            string str1 = coor[i].substr(0,str);
+            string str2 = coor[i].substr(str+1,coor[i].size());
+            coor1.push_back(stod(str1));
+            coor2.push_back(stod(str2));
+        }
+    }
+
+    if(filename == "RIOBUSES.csv"){
+        while (getline(file, line)) {
+            stringstream ss(line);
+            string item;
+
+            int i = 0;
+            while(getline(ss, item, ',')){
+                if(i == 4){
+                    coor1.push_back(stod(item));
+                }
+                if(i == 5){
+                    coor2.push_back(stod(item));
+                }
+                i++;
+            }
+        }
+    }
+
+    // normalize coor1 and coor2 to 0-1 (min-max normalization)
+    double min1 = *min_element(coor1.begin(), coor1.end());
+    double max1 = *max_element(coor1.begin(), coor1.end());
+    double min2 = *min_element(coor2.begin(), coor2.end());
+    double max2 = *max_element(coor2.begin(), coor2.end());
+    for(int i = 0; i < coor1.size(); i++){
+        coor1[i] = (coor1[i]-min1)/(max1-min1);
+        coor2[i] = (coor2[i]-min2)/(max2-min2);
+    }
+
+
+    vector<std::vector<double>> sampleDistances;
+    for(int i = 0; i < coor1.size(); i++){
+        vector<double> temp;
+        for(int j = 0; j < coor1.size(); j++){
+            double distance = sqrt(pow(coor1[i]-coor1[j],2)+pow(coor2[i]-coor2[j],2));
+            temp.push_back(distance);
+        }
+        sampleDistances.push_back(temp);
+    }
+    return sampleDistances;
+}

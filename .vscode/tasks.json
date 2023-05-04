@@ -12,6 +12,8 @@
                 "myprogram.exe",
                 "-I",
                 "C:\\Users\\Hangao Liang\\AppData\\Local\\Programs\\Python\\Python39\\include",
+                "-I",
+                "C:\\Users\\Hangao Liang\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\numpy\\core\\include",
                 "-L",
                 "C:\\Users\\Hangao Liang\\AppData\\Local\\Programs\\Python\\Python39\\libs",
                 "-l",

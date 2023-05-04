@@ -2,7 +2,10 @@
 #include <vector>
 #include <iostream>
 #include <time.h>
+#include <algorithm>
 #include "dbscan.hpp"
+
+
 
 using namespace std;
 
@@ -13,8 +16,8 @@ int main()
     
     start_time = clock(); 
     Graph G;
-    DBSCAN D(2, 3);
-    std::string filename = "test.csv";
+    DBSCAN D(0.005, 50);
+    string filename = "test.csv";
     int n = 15;
     double p = 0.15;
 
@@ -37,20 +40,38 @@ int main()
     G.computeSCC();
     G.printSCC();
 
-    //tested on (2, 3), (3, 4), (4, 4), (4, 5), (5, 5), (6, 4), (6, 5), (6, 6), (7, 5), (8, 7)
-    std::vector<std::vector<double>> sampleDistances = {
-        {0, sqrt(2), sqrt(5), sqrt(8), sqrt(13), sqrt(17), sqrt(20),5,sqrt(29),sqrt(52)},
-        {sqrt(2), 0, 1, sqrt(2), sqrt(5), 3, sqrt(10),sqrt(13),sqrt(17),sqrt(34)},
-        {sqrt(5), 1, 0, 1, sqrt(2), 2, sqrt(5),sqrt(8),sqrt(10),5},
-        {sqrt(8), sqrt(2), 1, 0, 1, sqrt(5),2,sqrt(5),3,sqrt(20)},
-        {sqrt(13), sqrt(5), sqrt(2), 1, 0, sqrt(2),1,sqrt(2),2,sqrt(13)},
-        {sqrt(17), 3, 2, sqrt(5), sqrt(2), 0, 1,2,sqrt(2),sqrt(13)},
-        {sqrt(20), sqrt(10), sqrt(5), 2, 1, 1,0,1,1,sqrt(8)},
-        {5,sqrt(13),sqrt(8),sqrt(5),sqrt(2),2,1,0,sqrt(2),sqrt(8)},
-        {sqrt(29),sqrt(17),sqrt(10),3,sqrt(2),sqrt(2),1,sqrt(2),0,sqrt(5)},
-        {sqrt(52),sqrt(34),5,sqrt(20),sqrt(13),sqrt(13),sqrt(8),sqrt(8),sqrt(5),0}
-    };
+    //// tested on (2, 3), (3, 4), (4, 4), (4, 5), (5, 5), (6, 4), (6, 5), (6, 6), (7, 5), (8, 7)
+    // std::vector<std::vector<double>> sampleDistances = {
+    //     {0, sqrt(2), sqrt(5), sqrt(8), sqrt(13), sqrt(17), sqrt(20),5,sqrt(29),sqrt(52)},
+    //     {sqrt(2), 0, 1, sqrt(2), sqrt(5), 3, sqrt(10),sqrt(13),sqrt(17),sqrt(34)},
+    //     {sqrt(5), 1, 0, 1, sqrt(2), 2, sqrt(5),sqrt(8),sqrt(10),5},
+    //     {sqrt(8), sqrt(2), 1, 0, 1, sqrt(5),2,sqrt(5),3,sqrt(20)},
+    //     {sqrt(13), sqrt(5), sqrt(2), 1, 0, sqrt(2),1,sqrt(2),2,sqrt(13)},
+    //     {sqrt(17), 3, 2, sqrt(5), sqrt(2), 0, 1,2,sqrt(2),sqrt(13)},
+    //     {sqrt(20), sqrt(10), sqrt(5), 2, 1, 1,0,1,1,sqrt(8)},
+    //     {5,sqrt(13),sqrt(8),sqrt(5),sqrt(2),2,1,0,sqrt(2),sqrt(8)},
+    //     {sqrt(29),sqrt(17),sqrt(10),3,sqrt(2),sqrt(2),1,sqrt(2),0,sqrt(5)},
+    //     {sqrt(52),sqrt(34),5,sqrt(20),sqrt(13),sqrt(13),sqrt(8),sqrt(8),sqrt(5),0}
+    // };
 
+    // std::vector<std::vector<double>> sampleDistances = {
+    //     {0,1,1,sqrt(72),sqrt(61),sqrt(61)},
+    //     {1,0,sqrt(2),sqrt(61),sqrt(50),sqrt(52)},
+    //     {1,sqrt(2),0,sqrt(61),sqrt(52),sqrt(50)},
+    //     {sqrt(72),sqrt(61),sqrt(61),0,1,1},
+    //     {sqrt(61),sqrt(50),sqrt(52),1,0,sqrt(2)},
+    //     {sqrt(61),sqrt(52),sqrt(50),1,sqrt(2),0}
+    // };
+
+    // Print points coor1 and coor2
+    // plt::plot(coor1, coor2);
+    // plt::xlabel("coor1");
+    // plt::ylabel("coor2");
+    // plt::title("LondonTrajectoriesDataset");
+    // plt::show();
+    // plt::save("./data/LondonTrajectoriesDataset.png");
+    string filename1 = "RIOBUSES.csv";
+    vector<vector<double>> sampleDistances = G.GetSampleDistances(filename1);
     D.setDistances(sampleDistances);
     D.sortDistances();
     std::vector<int>clusters(D.size,0);
@@ -62,5 +83,6 @@ int main()
     std::cout << "Total time: " << total_time << "s" << std::endl;
     std::cout << "Press any key to exit...";
     getchar(); // waits for user to press any key
+    // Sleep(5000);
     return 0;
 }

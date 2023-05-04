@@ -36,6 +36,8 @@ public:
     void sortDistances();
     void printSortedDistances() const;
     void printSortedIndices() const;
+    // str1, str2: column names of the two columns of coordinates
+    std::vector<std::vector<double>> GetSampleDistances(std::string filename);
 
 
 };
