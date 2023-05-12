@@ -28,7 +28,7 @@ public:
     void printNestedVector(const std::vector<std::vector<int>>& nested_vector) const;
     void DFS(int i);
     void computeSCC();
-    void printSCC();
+    void printSCC(bool verbose);
     double RandomGene();
     void ERDirectedGraph(int n, double p, std::string filename);
     void printDistanceMatrix() const;
@@ -38,6 +38,11 @@ public:
     void printSortedIndices() const;
     // str1, str2: column names of the two columns of coordinates
     std::vector<std::vector<double>> GetSampleDistances(std::string filename);
+
+    // Gaussian points generator
+    bool isInSquare(double x, double y);
+    std::vector<double> generateGaussianPoints(double meanX, double meanY, double stddev, int num_points);
+    std::vector<std::vector<double>> randompoints(double stddev, int num_points,std::vector<double> centerX, std::vector<double> centerY, bool ifstock);
 
 
 };

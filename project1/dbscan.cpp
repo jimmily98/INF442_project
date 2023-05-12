@@ -55,10 +55,37 @@ void DBSCAN::Scan(double eps, int minPts, std::vector<int>& clusters) {
 }
 
 // print the clusters
-void DBSCAN::PrintClusters(std::vector<int>& clusters) {
-    std::cout << "The clusters are: " << std::endl;
-    for (int i = 0; i < size; i++) {
-        std::cout << clusters[i] << " ";
+void DBSCAN::PrintClusters(std::vector<int>& clusters, bool verbose, bool tofile, std::string filename) {
+    if(verbose){
+        // print the list of clusters
+        std::cout << "The clusters are: " << std::endl;
+        for (int i = 0; i < size; i++) {
+            std::cout << clusters[i] << " ";
+        }
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
+    else{
+        // print the number of points in each cluster
+        int n_cluster = std::max_element(clusters.begin(), clusters.end())[0];
+        int noise = std::count(clusters.begin(), clusters.end(), -1);
+        std::cout << "The number of outliers is: " << noise << std::endl;
+        for(int i = 1; i < n_cluster + 1; i++){
+            int n_points = std::count(clusters.begin(), clusters.end(), i);
+            std::cout << "The number of points in cluster " << i << " is: " << n_points << std::endl;
+        }
+    if(tofile){
+        std::ofstream myfile(filename, std::ios::trunc);  
+        myfile << "clusters," << "minpts," << "eps" << std::endl;
+        for (auto i = clusters.begin(); i != clusters.end(); ++i) {
+            if(i == clusters.begin()){
+                myfile << *i << "," << minPts << "," << eps << std::endl;
+            }
+            else{
+                myfile << *i << std::endl;  
+            }  
+        }
+        myfile.close();  
+    }
+
+    }
 }
